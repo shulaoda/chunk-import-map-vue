@@ -20,7 +20,7 @@
   },
   "pnpm": {
     "overrides": {
-      "rolldown": "1.0.0-beta.28-commit.aaef991"
+      "rolldown": "1.0.0-beta.28-commit.7ef342d"
     }
   }
 }

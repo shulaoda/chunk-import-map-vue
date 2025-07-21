@@ -6,29 +6,25 @@ export default defineConfig({
     minify: false,
     rollupOptions: {
       experimental: {
-        chunkImportMap: true
+        chunkImportMap: {
+          baseUrl: '/',
+          fileName: 'importmap.json'
+        }
       }
     }
   },
   plugins: [vue(), {
-    name: 'apply-import-map',
+    name: 'inject-import-map',
     transformIndexHtml(html, ctx) {
       if (ctx.bundle) {
-        const chunk = ctx.bundle['.chunk-import-map.json']
+        const chunk = ctx.bundle['importmap.json']
         if (chunk?.type == 'asset') {
-          const chunkImportMap: Record<string, string> = JSON.parse(chunk.source.toString());
-          // Customize the base URL prefix for import map entries (defaults to "./")
-          // const imports = Object.fromEntries(Object.entries(chunkImportMap).map(([key, value]) => [
-          //   path.posix.join('/', key),
-          //   path.posix.join('/', value),
-          // ]));
-          const importMap = { imports: chunkImportMap };
           return {
             html,
             tags: [{
               tag: 'script',
               attrs: { type: 'importmap' },
-              children: JSON.stringify(importMap)
+              children: chunk.source.toString()
             }]
           }
         }
